@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const annNext = document.getElementById('next-announcement');
     
     // Change this version string to force the announcement to show again for all users
-    const ANN_VERSION = 'v1.2'; 
+    const ANN_VERSION = 'v1.3'; 
     
     const announcements = [
         '<i class="fas fa-hammer mr-2 text-yellow-300"></i> <span class="font-black">PROUDLY UPDATING:</span> We are modernizing our curriculum levels daily. Stay tuned!',
@@ -19,46 +19,89 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentAnnIndex = 0;
     let autoPlayInterval = null;
-    const AUTO_PLAY_DELAY = 5000; // 5 seconds
+    let progressInterval = null;
+    const AUTO_PLAY_DELAY = 6000; // 6 seconds for better reading
+    const PROGRESS_STEP = 50; // Update every 50ms for smoothness
+    
+    const progressBar = document.getElementById('announcement-progress');
 
-    function renderAnnouncement() {
+    function resetProgressBar() {
+        if (progressBar) {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+        }
+    }
+
+    function startProgressBar() {
+        if (!progressBar) return;
+        
+        resetProgressBar();
+        let startTime = Date.now();
+        
+        if (progressInterval) clearInterval(progressInterval);
+        
+        progressInterval = setInterval(() => {
+            let elapsed = Date.now() - startTime;
+            let progress = Math.min((elapsed / AUTO_PLAY_DELAY) * 100, 100);
+            progressBar.style.width = progress + '%';
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+            }
+        }, PROGRESS_STEP);
+    }
+
+    function renderAnnouncement(isNext = true) {
         if (!annContent) return;
         
-        // Remove animation class to restart it
-        annContent.classList.remove('announcement-fade');
+        // Phase 1: Fade out
+        annContent.classList.remove('announcement-fade-in');
+        annContent.classList.add('announcement-fade-out');
         
-        // Force reflow
-        void annContent.offsetWidth;
-        
-        // Update content and add animation
-        annContent.innerHTML = announcements[currentAnnIndex];
-        annContent.classList.add('announcement-fade');
+        setTimeout(() => {
+            // Update content
+            annContent.innerHTML = announcements[currentAnnIndex];
+            
+            // Phase 2: Fade in
+            annContent.classList.remove('announcement-fade-out');
+            annContent.classList.add('announcement-fade-in');
+            
+            // Restart progress bar if auto-playing
+            if (autoPlayInterval) startProgressBar();
+        }, 300); // Matches fade-out duration
     }
 
     function nextAnnouncement() {
         currentAnnIndex = (currentAnnIndex < announcements.length - 1) ? currentAnnIndex + 1 : 0;
-        renderAnnouncement();
+        renderAnnouncement(true);
     }
 
     function prevAnnouncement() {
         currentAnnIndex = (currentAnnIndex > 0) ? currentAnnIndex - 1 : announcements.length - 1;
-        renderAnnouncement();
+        renderAnnouncement(false);
     }
 
     function startAutoPlay() {
-        if (autoPlayInterval) clearInterval(autoPlayInterval);
+        stopAutoPlay();
         autoPlayInterval = setInterval(nextAnnouncement, AUTO_PLAY_DELAY);
+        startProgressBar();
     }
 
     function stopAutoPlay() {
         if (autoPlayInterval) clearInterval(autoPlayInterval);
+        if (progressInterval) clearInterval(progressInterval);
+        autoPlayInterval = null;
+        progressInterval = null;
+        resetProgressBar();
     }
 
     if (annBar && annClose) {
         // Show if not dismissed
         if (localStorage.getItem('hl_announcement_dismissed') !== ANN_VERSION) {
             annBar.classList.remove('hidden');
-            renderAnnouncement();
+            // Initial render
+            annContent.innerHTML = announcements[currentAnnIndex];
+            annContent.classList.add('announcement-fade-in');
             startAutoPlay();
             
             // Hover interactions
@@ -69,10 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (annPrev && annNext) {
                 annPrev.onclick = (e) => {
                     e.stopPropagation();
+                    stopAutoPlay();
                     prevAnnouncement();
                 };
                 annNext.onclick = (e) => {
                     e.stopPropagation();
+                    stopAutoPlay();
                     nextAnnouncement();
                 };
             }
@@ -80,12 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         annClose.onclick = (e) => {
             e.stopPropagation();
-            annBar.style.opacity = '0';
-            annBar.style.transform = 'translateY(-100%)';
+            stopAutoPlay();
+            annBar.classList.add('hiding');
             setTimeout(() => {
                 annBar.classList.add('hidden');
                 localStorage.setItem('hl_announcement_dismissed', ANN_VERSION);
-            }, 400);
+            }, 600);
         };
     }
 });

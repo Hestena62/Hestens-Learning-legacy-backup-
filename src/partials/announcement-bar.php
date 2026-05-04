@@ -7,7 +7,7 @@
             </button>
             
             <div id="announcement-content-container" class="w-full flex justify-center items-center overflow-hidden">
-                <p id="announcement-content" class="text-[11px] sm:text-[13px] font-bold tracking-tight text-white/95 w-full mx-auto max-w-4xl truncate sm:whitespace-normal drop-shadow-sm">
+                <p id="announcement-content" class="text-[11px] sm:text-[13px] font-bold tracking-tight text-white/95 w-full mx-auto max-w-4xl whitespace-normal drop-shadow-sm leading-tight px-1">
                     <!-- Content will be injected by JS -->
                 </p>
             </div>
@@ -21,6 +21,10 @@
                     <i class="fas fa-times text-xs"></i>
                 </button>
             </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="absolute bottom-0 left-0 w-full h-[2px] bg-white/5 overflow-hidden">
+            <div id="announcement-progress" class="h-full bg-white/30 w-0 transition-none"></div>
         </div>
     </div>
 
