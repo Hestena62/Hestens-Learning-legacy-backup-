@@ -40,4 +40,47 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const greetingEl = document.getElementById('dynamic-greeting');
     if (greetingEl) greetingEl.textContent = window.getGreeting();
+
+    // --- 4. User Dropdown Toggle ---
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    if (userMenuButton && userDropdown) {
+        const arrow = document.getElementById('user-menu-arrow');
+        
+        userMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = userDropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                userDropdown.classList.remove('hidden');
+                if (arrow) arrow.classList.add('rotate-180');
+                // Small delay to allow display:block to apply before animating opacity
+                setTimeout(() => {
+                    userDropdown.classList.remove('opacity-0', 'scale-95');
+                    userDropdown.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            } else {
+                userDropdown.classList.remove('opacity-100', 'scale-100');
+                userDropdown.classList.add('opacity-0', 'scale-95');
+                if (arrow) arrow.classList.remove('rotate-180');
+                // Wait for animation to finish before hiding
+                setTimeout(() => {
+                    userDropdown.classList.add('hidden');
+                }, 200);
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target) && !userDropdown.classList.contains('hidden')) {
+                userDropdown.classList.remove('opacity-100', 'scale-100');
+                userDropdown.classList.add('opacity-0', 'scale-95');
+                if (arrow) arrow.classList.remove('rotate-180');
+                setTimeout(() => {
+                    userDropdown.classList.add('hidden');
+                }, 200);
+            }
+        });
+    }
 });

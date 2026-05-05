@@ -100,6 +100,26 @@
                                 class="bg-base-bg text-text-default rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary w-full lg:w-48 border border-gray-200 dark:border-gray-700 transition-all duration-300" />
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-primary transition-colors"></i>
                         </form>
+
+                        <!-- User Dropdown -->
+                        <div class="relative inline-block text-left" id="user-menu-container">
+                            <button type="button" id="user-menu-button" class="flex items-center gap-2 pl-3 pr-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-transparent focus:outline-none transition-all duration-300">
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:block">User</span>
+                                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-transparent hover:border-primary transition-all duration-300">
+                                    <img src="/assets/images/6791421e-7ca7-40bd-83d3-06a479bf7f36.png" alt="User Profile" class="w-full h-full object-cover">
+                                </div>
+                                <i id="user-menu-arrow" class="fas fa-chevron-down text-xs text-gray-500 dark:text-gray-400 transition-transform duration-300"></i>
+                            </button>
+
+                            <div id="user-dropdown" class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-gray-100 dark:border-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none hidden transition-all duration-200 opacity-0 transform scale-95" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
+                                <div class="p-2" role="none">
+                                    <a href="/student" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-primary transition-colors" role="menuitem"><i class="fas fa-user-circle mr-2"></i> Dashboard</a>
+                                    <a href="/settings.php" class="text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-primary transition-colors" role="menuitem"><i class="fas fa-cog mr-2"></i> Settings</a>
+                                    <div class="my-1 border-t border-gray-100 dark:border-slate-700"></div>
+                                    <a href="/logout" class="text-red-600 dark:text-red-400 block px-4 py-2 text-sm rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" role="menuitem"><i class="fas fa-sign-out-alt mr-2"></i> Sign out</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -139,5 +159,4 @@
     </header>
 
     <script src="/assets/js/a11y.js"></script>
-    <script src="/assets/js/core-ui.js"></script>
     <script src="/assets/js/core-ui.js"></script>
